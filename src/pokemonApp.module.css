@@ -1,0 +1,47 @@
+.app {
+padding: 20px 0;
+
+}
+
+.mainWrap {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.mainBlock {
+  width: 50%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.aboutBlock {
+    width: 50%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+  }
+
+.btnWrap {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.btnWrap button {
+  background-color:azure;
+  padding: 10px 20px;
+  border: 2px solid lightgray;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.btnWrap button:hover {
+  background-color:rgb(204, 251, 251);
+}
