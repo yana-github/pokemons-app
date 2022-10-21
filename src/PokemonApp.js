@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./pokemonApp.module.css";
 import PokemonList from "./components/PokemonList";
@@ -6,49 +6,51 @@ import PokemonDetails from "./components/PokemonDetails";
 
 const url = "https://pokeapi.co/api";
 
-class PokemonApp extends React.Component {
-  state = {
-    pokemons: null,
-    selectedPokemon: null,
-    pokemonDetail: null,
-  };
+const PokemonApp = () => {
 
-  componentDidMount() {
-    axios.get(`${url}/v2/pokemon/?offset=0&limit=20.json`).then((response) => {
-      const pokemons = response.data.results;
-      this.setState({ pokemons });
-    });
-  }
+const [pokemons, setPokemons] = useState(null);
+const [selectedPokemon, setSelectedPokemon] = useState(null);
+const [pokemonDetail, setPokemonDetail] = useState(null);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.selectedPokemon !== prevState.selectedPokemon) {
-      this.fetchData(this.state.selectedPokemon);
+
+useEffect(() => {
+  axios.get(`${url}/v2/pokemon/?offset=0&limit=20.json`).then((response) => {
+    const pokemons = response.data.results;
+    setPokemons(pokemons);
+  });
+}, []);
+
+
+  useEffect(() => {
+    if (selectedPokemon !== null) {
+      fetchData(selectedPokemon);
     }
-  }
+  }, [selectedPokemon]);
 
-  fetchData = (path) => {
-    console.log("fetch");
+
+
+
+
+
+ const fetchData = (path) => {
 
     axios.get(`${path}`).then((response) => {
       const pokemonDetail = response.data;
-      this.setState({ pokemonDetail });
+ setPokemonDetail(pokemonDetail);
     });
   };
 
-  toGetInfo = (name) => {
-    const selectedPokemon = this.state.pokemons.filter((pokemon) => {
+ const toGetInfo = (name) => {
+    const selectedPokemon = pokemons.filter((pokemon) => {
       if (pokemon.name === name) {
         return pokemon;
       }
       return null;
     });
 
-    this.setState({ selectedPokemon: selectedPokemon[0].url });
+    setSelectedPokemon(selectedPokemon[0].url);
   };
 
-  render() {
-    const { pokemons, pokemonDetail } = this.state;
-    console.log(pokemonDetail);
 
     if (!pokemons) {
       return <h1>ЗАГРУЗКА</h1>;
@@ -57,7 +59,7 @@ class PokemonApp extends React.Component {
       <div className={styles.app}>
         <div className={styles.mainWrap}>
           <div className={styles.mainBlock}>
-            <PokemonList pokemons={pokemons} toGetInfo={this.toGetInfo} />
+            <PokemonList pokemons={pokemons} toGetInfo={toGetInfo} />
           </div>
           <div className={styles.aboutBlock}>
             {pokemonDetail && (
@@ -82,7 +84,6 @@ class PokemonApp extends React.Component {
         </div>
       </div>
     );
-  }
-}
+  };
 
 export default PokemonApp;
