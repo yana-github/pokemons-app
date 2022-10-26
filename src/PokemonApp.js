@@ -3,6 +3,7 @@ import axios from "axios";
 import styles from "./pokemonApp.module.css";
 import PokemonList from "./components/PokemonList";
 import PokemonDetails from "./components/PokemonDetails";
+import Search from "./components/Search";
 
 const url = "https://pokeapi.co/api";
 
@@ -11,6 +12,8 @@ const PokemonApp = () => {
 const [pokemons, setPokemons] = useState(null);
 const [selectedPokemon, setSelectedPokemon] = useState(null);
 const [pokemonDetail, setPokemonDetail] = useState(null);
+
+const[inputValue, setInputValue] = useState("");
 
 
 useEffect(() => {
@@ -52,14 +55,33 @@ useEffect(() => {
   };
 
 
+  const filterPokemons = () => {
+    if(pokemons) {
+      let copyPokemons = [...pokemons];
+      if(inputValue) {
+        let filterPokemons = copyPokemons.filter((pokemon) => {
+          return pokemon.name.toLowerCase().includes(inputValue.toLowerCase().split(' ').join(''));
+        })
+        return filterPokemons;
+      }
+    }
+  }
+
+  const filteredPokemons = filterPokemons();
+
     if (!pokemons) {
       return <h1>ЗАГРУЗКА</h1>;
     }
     return (
       <div className={styles.app}>
+  
         <div className={styles.mainWrap}>
+
+   
           <div className={styles.mainBlock}>
-            <PokemonList pokemons={pokemons} toGetInfo={toGetInfo} />
+          <Search onChange={(e) => setInputValue(e.target.value)} />
+          <br/>
+            <PokemonList pokemons={filteredPokemons ? filteredPokemons : pokemons } toGetInfo={toGetInfo} />
           </div>
           <div className={styles.aboutBlock}>
             {pokemonDetail && (
